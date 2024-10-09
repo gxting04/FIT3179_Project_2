@@ -1,0 +1,36 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": "Pakatan Harapan",
+    "data": {
+      "url": "party_seats.csv",
+      "format": {"type": "csv"}
+    },
+    "transform": [
+      {
+        "filter": "datum.party === 'DAP' || datum.party === 'PKR' || datum.party === 'AMANAH' || datum.party === 'UPKO'"
+      }
+    ],
+
+ 
+    "layer": [
+      {
+        "mark": {
+          "type": "arc",
+          "innerRadius": 20,
+          "stroke": "#fff"
+        }},
+        {
+            "mark": {"type": "text", "radiusOffset": 10},
+            "encoding": {
+              "text": {"field": "seats", "type": "quantitative"},
+              "theta": {"field": "seats", "type": "quantitative", "stack": true}
+            }
+          }],
+        "encoding": {
+          "theta": {"field": "seats", "type": "quantitative", "stack": true},
+          "radius": {"field": "seats", "scale": {"type": "sqrt", "zero": true, "rangeMin": 20}},
+          "color": {"field": "party", "type": "nominal"}
+        }
+      
+  }
+  

@@ -1,0 +1,45 @@
+
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "title": {
+        "text": "Total votes from Malaysia's GE15 by states",
+        "fontSize": 28},
+    "width": 900,  
+    "height": 800, 
+    "data": {
+        "url": "ne_1.json",
+        "format": { "type": "topojson", "feature": "ne_10m_admin_1_states_provinces" }
+    },
+    "transform": [
+        {
+            "lookup": "properties.name",
+            "from": {
+                "data": {
+                    "url": "state_votes_with_area.csv"
+                },
+                "key": "state",
+                "fields": ["votes", "area"]
+            }
+        },
+        {
+            "calculate": "datum.votes/datum.area", "as": "Voter Density"
+        }
+    ],
+    "mark": { "type": "geoshape" },
+    "encoding": {
+        "color": {
+            "field": "Voter Density",
+            "type": "quantitative",
+            "scale": {
+                "scheme": "blues" ,
+                "type": "log"
+            }
+        },
+        "tooltip": [
+            { "field": "properties.name", "type": "nominal", "title": "State" },
+            { "field": "votes", "type": "quantitative", "title": "Total Votes"},
+            {"field": "area", "type": "quantitative", "title": "Area (km2)"}
+        ]
+    }
+}
+

@@ -1,0 +1,63 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 400,
+    "height": 300,
+    "title": {
+      "text": "Population Pyramid by Age Group",
+      "fontSize": 20
+    },
+    "data": {
+      "url": "cleaned.csv",
+      "format": {"type": "csv"}
+    },
+    "transform": [
+        {
+            "filter": "datum.state === 'Total'"
+          },
+        {
+            "fold": ["male_18_20", "female_18_20", "male_21_29", "female_21_29", "male_30_39", "female_30_39", "male_40_49", "female_40_49", "male_50_59", "female_50_59", "male_60_69", "female_60_69", "male_70_79", "female_70_79", "male_80_89", "female_80_89", "male_90_above", "female_90_above"], 
+            "as": ["gender_age", "population"]
+        },
+        {
+            "calculate": "split(datum.gender_age, '_')[0] == 'male' ? -datum.population : datum.population",
+            "as": "population_transformed"
+        },
+        {
+            "calculate": "split(datum.gender_age, '_')[1] + '-' + split(datum.gender_age, '_')[2]",
+            "as": "age_group"
+        },
+        {
+            "calculate": "split(datum.gender_age, '_')[0]",
+            "as": "gender"
+        }
+    ],
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": "population_transformed",
+        "type": "quantitative",
+        "title": "Population",
+        "axis": {"format": "s"}
+      },
+      "y": {
+        "field": "age_group",
+        "type": "nominal",
+        "title": "Age Group",
+        "sort": ["90-above", "80-89", "70-79", "60-69", "50-59", "40-49", "30-39", "21-29", "18-20"]
+      },
+      "color": {
+        "field": "gender",
+        "type": "nominal",
+        "scale": {
+          "domain": ["male", "female"],
+          "range": ["#1f77b4", "#ff7f0e"]
+        }
+      },
+      "tooltip": [
+        {"field": "gender", "type": "nominal", "title": "Gender"},
+        {"field": "age_group", "type": "nominal", "title": "Age Group"},
+        {"field": "population", "type": "quantitative", "title": "Population"}
+      ]
+    }
+  }
+  
